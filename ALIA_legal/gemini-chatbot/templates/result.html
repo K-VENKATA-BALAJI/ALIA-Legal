@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Summary</h1>
+    <p>{{ summary }}</p>
+
+    <div id="chat">
+        <h2>Chat with AI</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Ask a question...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#send-button').click(function() {
+                var userInput = $('#user-input').val();
+                $('#chat-box').append('<div>User: ' + userInput + '</div>');
+                $('#user-input').val('');
+
+                $.post('/chat', { question: userInput }, function(data) {
+                    $('#chat-box').append('<div>AI: ' + data.answer + '</div>');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

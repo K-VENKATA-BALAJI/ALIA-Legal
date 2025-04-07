@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with PDF</title>
+</head>
+<body>
+    <h1>Chat with Your PDF</h1>
+    
+    <form action="/chat" method="POST">
+        <label for="user_question">Ask a question:</label>
+        <input type="text" name="user_question" required>
+        <button type="submit">Send</button>
+    </form>
+
+    {% if user_question %}
+        <h2>You Asked:</h2>
+        <p>{{ user_question }}</p>
+        <h2>Chatbot Answer:</h2>
+        <p>{{ bot_response }}</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Upload Another PDF</a>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <p>Search Query: <strong>{{ query }}</strong></p>
+    <h2>Matching Lines:</h2>
+    {% if results %}
+        <ul>
+            {% for line in results %}
+                <li>{{ line }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No matches found.</p>
+    {% endif %}
+    <br>
+    <a href="/">Go Back</a>
+</body>
+</html>

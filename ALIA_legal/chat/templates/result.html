@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Results</title>
+</head>
+
+<body>
+    <h1>Analysis Results</h1>
+    <h2>Extracted Text:</h2>
+    <pre>{{ text }}</pre>
+    <h2>Summary:</h2>
+    <pre>{{ summary }}</pre>
+    <h2>Named Entities:</h2>
+    <ul>
+        {% for entity_type, entity_values in entities.items() %}
+        <li><strong>{{ entity_type }}:</strong> {{ ', '.join(entity_values) }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Search in Extracted Text:</h2>
+    <form action="/search" method="POST">
+        <input type="text" name="search_query" placeholder="Enter word or phrase" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Ask Questions:</h2>
+    <form action="/ask" method="POST">
+        <input type="text" name="question" placeholder="Enter your question" required>
+        <button type="submit">Ask</button>
+    </form>
+
+
+    <br>
+    <a href="/">Go Back</a>
+</body>
+
+</html>

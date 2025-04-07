@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIA - Analysis Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-purple-100 font-sans text-gray-800 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-teal-600 to-indigo-700 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                <h1 class="text-2xl font-bold tracking-tight">ALIA - Analysis Results</h1>
+            </div>
+            <a href="{{ url_for('reset') }}" class="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors">Back to Upload</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-6">
+        <!-- Results and Tools -->
+        <section class="flex flex-col gap-6">
+            <!-- Tabs for Results -->
+            <div id="results" class="bg-white rounded-xl shadow-md p-6 card fade-in">
+                <div class="flex border-b border-gray-200">
+                    <button class="tab-btn px-4 py-2 font-medium text-teal-600 border-b-2 border-teal-600" data-tab="case-details">Case Details</button>
+                    <button class="tab-btn px-4 py-2 font-medium text-gray-600" data-tab="summary">Summary</button>
+                    <button class="tab-btn px-4 py-2 font-medium text-gray-600" data-tab="conclusion">Conclusion</button>
+                    <button class="tab-btn px-4 py-2 font-medium text-gray-600" data-tab="citations">Citations</button>
+                    <button class="tab-btn px-4 py-2 font-medium text-gray-600" data-tab="sections">Sections</button>
+                </div>
+                <div class="mt-4">
+                    <div id="case-details" class="tab-content active">
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Case Name</p>
+                                <p class="font-medium">{{ head1 }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Court</p>
+                                <p class="font-medium">{{ crtt }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Bench</p>
+                                <p class="font-medium">{{ benh }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="summary" class="tab-content">
+                        <p class="text-gray-700">{{ summary }}</p>
+                    </div>
+                    <div id="conclusion" class="tab-content">
+                        <p class="text-gray-700">{{ conclusion }}</p>
+                    </div>
+                    <div id="citations" class="tab-content">
+                        <p class="text-gray-700">{{ cits | join(', ') }}</p>
+                    </div>
+                    <div id="sections" class="tab-content">
+                        <p class="text-gray-700">{{ sec | join(', ') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q&A Section -->
+            <div id="ask" class="bg-white rounded-xl shadow-md p-6 card fade-in">
+                <h3 class="text-lg font-semibold mb-4 text-gray-900">Ask Questions</h3>
+                <form action="/ask" method="POST" class="space-y-4">
+                    <input type="text" name="search_query" placeholder="Ask a question about the document..." required class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                    <button type="submit" class="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors flex justify-center items-center">
+                        <span>Get Answer</span>
+                    </button>
+                </form>
+                {% if query %}
+                <div class="mt-6 space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Your Question</p>
+                        <p class="mt-1 text-gray-700">{{ query }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Answer</p>
+                        <p class="mt-1 text-gray-700">{{ results }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Search Section -->
+            <div id="search" class="bg-white rounded-xl shadow-md p-6 card fade-in">
+                <h3 class="text-lg font-semibold mb-4 text-gray-900">Search Document</h3>
+                <div class="space-y-4">
+                    <input type="text" id="search-query" placeholder="Search terms, phrases, or sections..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                    <div class="flex gap-2">
+                        <button id="search-button" class="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors">Search</button>
+                        <button id="clear-highlights" class="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors">Clear</button>
+                    </div>
+                    <p id="search-results" class="text-sm text-gray-500"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Full-Width Extracted Text Section -->
+    <section id="extracted-text" class="max-w-7xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-xl shadow-md p-6 card fade-in relative">
+            <h3 class="text-lg font-semibold mb-4 text-gray-900">Extracted Text</h3>
+            <div id="document-text" class="text-gray-700 whitespace-pre-wrap text-sm border border-gray-200 p-4 rounded-md resize-vertical min-h-[400px]">
+                {{ extracted_text }}
+            </div>
+            <!-- Explanation Result -->
+            <div id="explanation-result" class="mt-4 text-gray-700 bg-gray-50 p-4 rounded-md text-sm hidden"></div>
+        </div>
+    </section>
+
+    <!-- Floating Explain Button -->
+    <button id="explain-button" class="fixed bottom-6 right-6 bg-teal-600 text-white p-4 rounded-full shadow-lg hover:bg-teal-700 transition-colors disabled:bg-gray-400" disabled title="Explain Selected Text">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+    </button>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
